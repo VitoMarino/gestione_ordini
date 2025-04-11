@@ -48,7 +48,7 @@
 
     // Tasto per resettare il carrello con il parametro GET
     echo "<div class='d-flex justify-content-center p-3'>
-            <a href='carrello.php?reset=true' class='btn btn-danger'>Reset Carrello</a>
+            <a href='carrello.php?reset=true' class='btn btn-danger'>Svuota Carrello</a>
         </div>";
     ?>
 
