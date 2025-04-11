@@ -15,6 +15,9 @@
     </h1>
 
     <?php
+    // Inizio sessione
+    session_start();
+
     // Leggi il file .env
     $env = file(__DIR__ . '/.env');
 
@@ -70,7 +73,7 @@
             <td>" . $row['nome'] . " </td> 
             <td>" . $row['prezzo'] . "</td>
             <td>" . $row['quantita_disponibile'] . "</td>
-            <td>" . "<i class='fa-solid fa-cart-shopping'></i>" . "</td>
+            <td> <button class='btn btn-primary'>" . "<i class='fa-solid fa-cart-shopping'></i>" . "</button> </td>
         </tr>";
         }
 
@@ -79,8 +82,17 @@
         echo "Nessun prodotto trovato";
     }
 
+    echo 
+    "<div class='d-flex justify-content-center p-3'>
+    <a href='carrello.php' class='btn btn-primary'> Carrello </a>
+    </div>";
+
+    $_SESSION['prodotti'] = $prodotti;
+
     // Chiudi la connessione
     $conn->close();
+
+
     ?>
 </body>
 
