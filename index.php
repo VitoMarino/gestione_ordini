@@ -49,7 +49,8 @@
     // Se la connessione ha avuto successo
     // echo "Connessione al database riuscita!";
 
-    //DB-------------------------------------------------------------
+    //CONNESSIONE AL DB
+    // -----------------------------------------------------
 
     // Query per ottenere tutti i prodotti
     $prodotti = "SELECT id, nome, prezzo, quantita_disponibile FROM prodotti";
@@ -69,12 +70,24 @@
         // La funzione fetch_assoc() è un metodo utilizzato in PHP per estrarre i dati da una query MySQL e restituirli come un array associativo.
         while ($row = $result->fetch_assoc()) {
             echo
+
+                // COMMENTI RELATIVI AL TAG <a></a> DELLA TABLE
+                /* ?aggiungi=true (Indica che l'utente ha cliccato sul link per aggiungere)
+                / &id=<?php echo $row[id]; ?> (Passa l'ID del prodotto)
+                / &nome=<?php echo urlencode($row[nome]); ?> (Passa il nome del prodotto)
+                / &prezzo=<?php echo $row[prezzo]; ?> (Passa il prezzo del prodotto)
+                / Urlencode serve a codificare i dati da inviare in un URL in modo che vengano interpretati correttamente dal server (Tipo caratteri speciali che non diano errori) */
+
             "<tr>
-            <td>" . $row['nome'] . " </td> 
-            <td>" . $row['prezzo'] . "</td>
-            <td>" . $row['quantita_disponibile'] . "</td>
-            <td> <button class='btn btn-primary'>" . "<i class='fa-solid fa-cart-shopping'></i>" . "</button> </td>
-        </tr>";
+                <td>" . $row['nome'] . " </td> 
+                <td>" . $row['prezzo'] . "</td>
+                <td>" . $row['quantita_disponibile'] . "</td>
+                <td>
+                    <a href='?aggiungi=true&id=" . $row['id'] . "&nome=" . urlencode($row['nome']) . "&prezzo=" . $row['prezzo'] . "' class='btn btn-primary'>
+                        <i class='fa-solid fa-cart-shopping'></i>
+                    </a>
+                </td>
+            </tr>";
         }
 
         echo "</table>";
@@ -82,16 +95,29 @@
         echo "Nessun prodotto trovato";
     }
 
-    echo 
+// Aggiungi il prodotto al carrello quando viene cliccato il link "AGGIUNGI"
+if (isset($_GET['aggiungi'])) {
+    // Controllo se i parametri sono presenti nell'URL e non sono vuoti
+    if (isset($_GET['id'], $_GET['nome'], $_GET['prezzo']) && !empty($_GET['id']) && !empty($_GET['nome']) && !empty($_GET['prezzo'])) {
+        // Aggiungi il prodotto al carrello nella sessione
+        $_SESSION['carrello'][] = [
+            'id' => $_GET['id'],
+            'nome' => $_GET['nome'],
+            'prezzo' => $_GET['prezzo']
+        ];
+    }
+    // Dopo aver aggiunto il prodotto, reindirizza alla pagina del carrello
+    header("Location: carrello.php");
+    exit;
+}
+
+    echo
     "<div class='d-flex justify-content-center p-3'>
     <a href='carrello.php' class='btn btn-primary'> Carrello </a>
     </div>";
 
-    $_SESSION['prodotti'] = $prodotti;
-
     // Chiudi la connessione
     $conn->close();
-
 
     ?>
 </body>
